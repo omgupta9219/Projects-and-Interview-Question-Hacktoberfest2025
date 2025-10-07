@@ -1,0 +1,40 @@
+import java.util.*;
+
+public class PriorityScheduling {
+    public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
+        System.out.print("Enter number of processes: ");
+        int n = sc.nextInt();
+
+        int[] burst = new int[n];
+        int[] priority = new int[n];
+        int[] waiting = new int[n];
+        int[] turnaround = new int[n];
+        Integer[] index = new Integer[n];
+
+        for (int i = 0; i < n; i++) {
+            System.out.print("Enter burst time for process " + (i + 1) + ": ");
+            burst[i] = sc.nextInt();
+            System.out.print("Enter priority for process " + (i + 1) + ": ");
+            priority[i] = sc.nextInt();
+            index[i] = i;
+        }
+
+        // Sort by priority (lower number = higher priority)
+        Arrays.sort(index, Comparator.comparingInt(i -> priority[i]));
+
+        waiting[index[0]] = 0;
+        for (int i = 1; i < n; i++) {
+            waiting[index[i]] = waiting[index[i - 1]] + burst[index[i - 1]];
+        }
+
+        for (int i = 0; i < n; i++) {
+            turnaround[i] = burst[i] + waiting[i];
+        }
+
+        System.out.println("\nProcess\tBurst\tPriority\tWaiting\tTurnaround");
+        for (int i = 0; i < n; i++) {
+            System.out.println((i + 1) + "\t" + burst[i] + "\t" + priority[i] + "\t\t" + waiting[i] + "\t" + turnaround[i]);
+        }
+    }
+}
